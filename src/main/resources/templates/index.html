@@ -4,8 +4,11 @@
     <title>首页</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 </head>
-<body>
+<body style="text-align: center">
     <h1 th:text="'Hello, Spring Boot and Thymeleaf'"></h1>
-    <a th:href="@{/login}">登录</a>
+    <h3>
+        <a th:href="@{/login}">登录</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a th:href="@{/register}">注册</a>
+    </h3>
 </body>
 </html>

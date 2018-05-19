@@ -20,8 +20,21 @@ public class UserServiceImpl implements UserService {
 		this.userMapper = userMapper;
 	}
 
+	// 根据用户名和密码查找用户
 	@Override
 	public UserDO getUser(UserDTO userDTO) {
 		return userMapper.getUser(userDTO);
+	}
+
+	// 根据用户名查找用户
+	@Override
+	public UserDO getUserByName(String userName) {
+		return userMapper.getUserByName(userName);
+	}
+
+	// 添加用户
+	@Override
+	public void insertUser(UserDO userDO) {
+		userMapper.insertUser(userDO);
 	}
 }

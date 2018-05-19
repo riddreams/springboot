@@ -4,8 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <title>登录</title>
 </head>
-<body>
-    <h3 th:text="'Hello, '+${session.userDO.userName}"></h3>
-    <a th:href="@{/logout}">退出</a>
+<body style="text-align: center">
+    <h1 th:text="'Hello, '+${session.userDO.userName}"></h1>
+    <h3><a th:href="@{/logout}">退出</a></h3>
 </body>
 </html>

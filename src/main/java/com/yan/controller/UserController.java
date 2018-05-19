@@ -6,8 +6,11 @@ import com.yan.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -16,34 +19,20 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class UserController{
 
+	private UserService userService;
+
 	@Autowired
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
 
-	private UserService userService;
-
-	@RequestMapping(value = "/")
-	public String index(){
-		return "index";
-	}
-
-	// 跳转到用户登录界面
-	@RequestMapping(value = "/login")
-	public String login(){
-		return "login";
-	}
-
-	@RequestMapping(value = "/home")
-	public String home(){
-		return "home";
-	}
-
 	// 处理登录
 	@RequestMapping(value = "/doLogin")
 	public String doLogin(UserDTO userDTO, HttpSession session, RedirectAttributes attr){
+		// 根据用户名和密码查询用户
 		UserDO userDO = userService.getUser(userDTO);
 		if(userDO!=null){
+			// 将用户存入session
 			session.setAttribute("userDO",userDO);
 			return "redirect:/home";
 		}else {
@@ -55,7 +44,37 @@ public class UserController{
 	// 处理退出登录
 	@RequestMapping(value = "/logout")
 	public String logout(HttpSession session){
+		// 清除session中的用户
 		session.removeAttribute("userDO");
 		return "redirect:/";
+	}
+
+	// ajax查询用户名是否已被注册
+	@ResponseBody
+	@RequestMapping(value = "/checkUser")
+	public void checkUser(HttpServletRequest request, HttpServletResponse response){
+		String userName = request.getParameter("userName");
+		UserDO userDO = userService.getUserByName(userName);
+		if(userDO!=null){
+			String message = "用户名不可用";
+			try {
+				response.getWriter().write(message);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// 处理注册
+	@RequestMapping(value = "/doRegister")
+	public String doRegister(UserDO userDO, RedirectAttributes attr){
+		userDO.setRole("user");
+		if(!"".equals(userDO.getUserName()) && !"".equals(userDO.getPassWord())){
+			userService.insertUser(userDO);
+			return "redirect:/login";
+		}else{
+			attr.addFlashAttribute("message","用户名或密码不能为空");
+			return "redirect:/register";
+		}
 	}
 }
