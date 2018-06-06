@@ -1,0 +1,103 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${session.userDO.userName}+'的个人主页'"></title>
+    <link rel="stylesheet" th:href="@{/bootstrap3.3.7/css/bootstrap.min.css}"/>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- 可以放一个logo -->
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/index}">XC</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/index}">吐槽</a></li>
+                <li><a href="">学习</a></li>
+                <li><a th:href="@{/enjoy/enjoyIndex}">娱乐</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <form class="navbar-form navbar-left" action="" method="post">
+                        <div class="form-group">
+                            <input type="text" name="keyword" class="form-control" placeholder="搜索关键字">
+                        </div>
+                        <button type="submit" class="btn btn-default">搜索</button>
+                    </form>
+                </li>
+                <li th:if="${session.userDO}!=null" class="dropdown">
+                    <a style="padding: 10px"  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <img th:src="@{'/header/'+${session.userDO.header}}" width="20px" src="">
+                        <span th:text="${session.userDO.userName}"></span>
+                        <i class="caret"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="btn" th:href="@{/userSetting/home}"><i class="glyphicon glyphicon-home"></i>个人主页</a></li>
+                        <li><a class="btn" th:href="@{/userSetting/settingbase}"><i class="glyphicon glyphicon-cog"></i>个人设置</a></li>
+                        <li><a class="btn" th:href="@{/logout}"><i class="glyphicon glyphicon-log-out"></i>退出登录</a></li>
+                    </ul>
+                </li>
+                <li th:if="${session.userDO}==null">
+                    <a style="color: blue" th:href="@{/login}">登录</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid" style="margin: 0;">
+    <div style="text-align: center" class="row">
+        <a href="javascript:void(0);">
+            <img title="修改头像" onclick="changeHeader()" th:src="@{'/header/'+${session.userDO.header}}" style="border-radius:50%;" width="120px" height="120px" src=""/>
+        </a>
+    </div>
+    <div style="text-align: center" class="row">
+        <h3 th:text="${session.userDO.userName}"></h3>
+        <h6 th:text="${session.userDO.intro}"></h6>
+    </div>
+    <div class="container">
+        <h3>我的粉丝</h3>
+        <h3>我的关注</h3>
+    </div>
+</div>
+<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="header" class="modal">
+    <div class="modal-dialog" style="width: 30%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">修改头像</h4>
+            </div>
+            <div class="modal-body">
+                <img th:src="@{'/header/'+${session.userDO.header}}" src="" width="120px" height="120px"/>
+                <form onsubmit="return check()" th:action="@{/changeHeader}" class="form-inline" method="post" enctype="multipart/form-data">
+                    <div class="row form-group">
+                        <label for="newHeader">上传头像</label>
+                        <input class="form-control" type="file" id="newHeader" name="newHeader"/>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <button class="btn btn-success" type="submit">修改</button>
+                        <button class="btn btn-primary" type="reset">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script th:src="@{/bootstrap3.3.7/js/jquery.min.js}"></script>
+<script th:src="@{/bootstrap3.3.7/js/bootstrap.min.js}"></script>
+<script>
+    function changeHeader() {
+        $("#header").modal({backdrop:"static",keyboard:false}).modal('show');
+    }
+    function check() {
+        if($("#newHeader").val()===""){
+            return false;
+        }
+    }
+</script>
+
+</html>

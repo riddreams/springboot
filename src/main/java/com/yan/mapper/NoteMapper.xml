@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yan.mapper.NoteMapper">
+
+    <resultMap id="noteMap" type="Note">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="score" column="score"/>
+    </resultMap>
+
+    <sql id="note_cols">
+        id,name,text,timing
+    </sql>
+
+    <select id="listNote" resultMap="noteMap">
+        select <include refid="note_cols"/> from note order by timing desc
+    </select>
+
+    <insert id="insertNote">
+        insert into note values(null,#{userName},#{says},#{timing})
+    </insert>
+</mapper>

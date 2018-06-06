@@ -1,0 +1,72 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>小游戏</title>
+    <link rel="stylesheet" th:href="@{/bootstrap3.3.7/css/bootstrap.min.css}"/>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- 可以放一个logo -->
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/index}">XC</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/index}">吐槽</a></li>
+                <li><a href="">学习</a></li>
+                <li class="active"><a th:href="@{/enjoy/enjoyIndex}">娱乐</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <form class="navbar-form navbar-left" action="" method="post">
+                        <div class="form-group">
+                            <input type="text" id="keyword" name="keyword" class="form-control" placeholder="搜索关键字">
+                        </div>
+                        <button type="submit" class="btn btn-default">搜索</button>
+                    </form>
+                </li>
+                <li th:if="${session.userDO}!=null" class="dropdown">
+                    <a style="padding: 10px"  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <img th:src="@{'/header/'+${session.userDO.header}}" width="20px" src="">
+                        <span th:text="${session.userDO.userName}"></span>
+                        <i class="caret"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="btn" th:href="@{/userSetting/home}"><i class="glyphicon glyphicon-home"></i>个人主页</a></li>
+                        <li><a class="btn" th:href="@{/userSetting/settingbase}"><i class="glyphicon glyphicon-cog"></i>个人设置</a></li>
+                        <li><a class="btn" th:href="@{/logout}"><i class="glyphicon glyphicon-log-out"></i>退出登录</a></li>
+                    </ul>
+                </li>
+                <li th:if="${session.userDO}==null">
+                    <a style="color: blue" th:href="@{/login}">登录</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row text-center">
+        <div class="col-md-8">
+            <h5 style="color: red">小提示：按下键盘上的上下左右按键可以改变方向，撞到墙或者自己游戏结束！点击下方开始游戏按钮即可开始。</h5>
+            <h3>得分&nbsp;&nbsp;<span id="score">0</span></h3>
+            <canvas id="can" width="400" height="400" style="background: Black"></canvas>
+            <div>
+                <a class="btn btn-primary text-center" onclick="snake()">开始游戏</a>
+            </div>
+        </div>
+        <div>
+            <h2>分数排行榜</h2>
+            <div class="col-md-4" id="range">
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+<script th:src="@{/bootstrap3.3.7/js/jquery.min.js}"></script>
+<script th:src="@{/bootstrap3.3.7/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/snake.js}"></script>
+
+</html>

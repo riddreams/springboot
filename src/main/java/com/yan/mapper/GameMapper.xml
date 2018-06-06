@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yan.mapper.GameMapper">
+
+    <resultMap id="gameMap" type="Game">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="score" column="score"/>
+    </resultMap>
+
+    <sql id="game_cols">
+        id,name,score
+    </sql>
+
+    <select id="listGame" resultMap="gameMap">
+        select <include refid="game_cols"/> from game order by score desc
+    </select>
+
+    <select id="getGame" resultMap="gameMap">
+        select <include refid="game_cols"/> from game where name = #{userName}
+    </select>
+    
+    <insert id="insertGame">
+        insert into game values(null,#{userName},#{score})
+    </insert>
+    
+    <update id="updateGame">
+        update game set score = #{score} where name = #{userName}
+    </update>
+</mapper>

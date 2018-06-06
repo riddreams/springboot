@@ -1,0 +1,95 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>修改基本资料</title>
+    <link rel="stylesheet" th:href="@{/bootstrap3.3.7/css/bootstrap.min.css}"/>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- 可以放一个logo -->
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/index}">XC</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/index}">吐槽</a></li>
+                <li><a href="">学习</a></li>
+                <li><a th:href="@{/enjoy/enjoyIndex}">娱乐</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <form class="navbar-form navbar-left" action="" method="post">
+                        <div class="form-group">
+                            <input type="text" name="keyword" class="form-control" placeholder="搜索关键字">
+                        </div>
+                        <button type="submit" class="btn btn-default">搜索</button>
+                    </form>
+                </li>
+                <li th:if="${session.userDO}!=null" class="dropdown">
+                    <a style="padding: 10px"  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <img th:src="@{'/header/'+${session.userDO.header}}" width="20px" src="">
+                        <span th:text="${session.userDO.userName}"></span>
+                        <i class="caret"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="btn" th:href="@{/userSetting/home}"><i class="glyphicon glyphicon-home"></i>个人主页</a></li>
+                        <li><a class="btn" th:href="@{/userSetting/settingbase}"><i class="glyphicon glyphicon-cog"></i>个人设置</a></li>
+                        <li><a class="btn" th:href="@{/logout}"><i class="glyphicon glyphicon-log-out"></i>退出登录</a></li>
+                    </ul>
+                </li>
+                <li th:if="${session.userDO}==null">
+                    <a style="color: blue" th:href="@{/login}">登录</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row col-md-offset-1">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="">基本资料</a></li>
+            <li role="presentation"><a href="">账号密码</a></li>
+        </ul>
+    </div>
+    <div class="row col-md-offset-1" style="margin-top: 3%">
+        <div class="col-md-6">
+            <form class="form-horizontal" onsubmit="return check()" th:action="@{/updateBase}" method="post">
+                <div class="form-group">
+                    <label for="userName" class="col-md-2 control-label">用户名</label>
+                    <div class="col-md-6">
+                        <input type="text" name="userName" class="form-control" id="userName" th:value="${session.userDO.userName}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="intro" class="col-md-2 control-label">个性签名</label>
+                    <div class="col-md-6">
+                        <textarea class="form-control" name="intro" id="intro" cols="30" rows="5" th:text="${session.userDO.intro}"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <span class="col-md-offset-2 col-md-8" id="info" style="color: red" th:text="${message}"></span>
+                    <div class="col-md-offset-2 col-md-8">
+                        <button class="col-md-2 btn btn-primary" type="submit">修改</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+<script th:src="@{/bootstrap3.3.7/js/jquery.min.js}"></script>
+<script th:src="@{/bootstrap3.3.7/js/bootstrap.min.js}"></script>
+<script>
+    function check() {
+        var userName = $("#userName").val();
+        if(userName===null||userName===""){
+            $("#info").html("用户名不能为空");
+            return false;
+        }
+    }
+</script>
+
+</html>
+

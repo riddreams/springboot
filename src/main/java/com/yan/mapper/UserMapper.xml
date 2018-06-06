@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yan.mapper.UserMapper">
+
+    <resultMap id="userMap" type="UserDO">
+        <id property="id" column="id"/>
+        <result property="userName" column="username"/>
+        <result property="passWord" column="password"/>
+        <result property="role" column="role"/>
+        <result property="salt" column="salt"/>
+        <result property="intro" column="intro"/>
+        <result property="header" column="header"/>
+    </resultMap>
+
+    <sql id="user_cols">
+        id,username,password,salt,role,intro,header
+    </sql>
+
+    <!--根据用户名查找用户-->
+    <select id="getUserByName" resultMap="userMap">
+        select <include refid="user_cols"/> from user where username = #{userName}
+    </select>
+    <!--添加用户-->
+    <insert id="insertUser">
+        insert into user values(null,#{userDO.userName},#{userDO.passWord},#{userDO.salt},#{userDO.role},#{userDO.intro},#{userDO.header})
+    </insert>
+    <!--根据用户名修改基本资料-->
+    <update id="updateBaseByName">
+        update user set username = #{userName},intro = #{intro} where username = #{oldName}
+    </update>
+    <!--修改头像-->
+    <update id="changeHeader">
+        update user set header = #{header} where username = #{userName}
+    </update>
+</mapper>
