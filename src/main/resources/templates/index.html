@@ -1,14 +1,86 @@
-<!DOCTYPE HTML>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>首页</title>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/bootstrap3.3.7/css/bootstrap.min.css}"/>
 </head>
-<body style="text-align: center">
-    <h1 th:text="'Hello, Spring Boot and Thymeleaf'"></h1>
-    <h3>
-        <a th:href="@{/login}">登录</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a th:href="@{/register}">注册</a>
-    </h3>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <!-- 可以放一个logo -->
+            <div class="navbar-header">
+                <a class="navbar-brand" th:href="@{/index}">XC</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a th:href="@{/index}">吐槽</a></li>
+                    <li><a href="">学习</a></li>
+                    <li><a th:href="@{/enjoy/enjoyIndex}">娱乐</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <form class="navbar-form navbar-left" action="" method="post">
+                            <div class="form-group">
+                                <input type="text" id="keyword" name="keyword" class="form-control" placeholder="搜索关键字">
+                            </div>
+                            <button type="submit" class="btn btn-default">搜索</button>
+                        </form>
+                    </li>
+                    <li th:if="${session.userDO}!=null" class="dropdown">
+                        <a style="padding: 10px"  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <img th:src="@{'/header/'+${session.userDO.header}}" width="20px" src="">
+                                <span th:text="${session.userDO.userName}"></span>
+                            <i class="caret"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="btn" th:href="@{/userSetting/home}"><i class="glyphicon glyphicon-home"></i>个人主页</a></li>
+                            <li><a class="btn" th:href="@{/userSetting/settingbase}"><i class="glyphicon glyphicon-cog"></i>个人设置</a></li>
+                            <li><a class="btn" th:href="@{/logout}"><i class="glyphicon glyphicon-log-out"></i>退出登录</a></li>
+                        </ul>
+                    </li>
+                    <li th:if="${session.userDO}==null">
+                        <a style="color: blue" th:href="@{/login}">登录</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <form class="form-horizontal" onsubmit="return checkSays()" th:action="@{/note/sendNote}" method="post">
+                <div class="form-group">
+                    <div class="col-md-6 col-md-offset-3">
+                        <textarea class="form-control" placeholder="说点什么吧！" name="says" id="says" cols="70" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6 col-md-offset-3">
+                        <button class="btn btn-primary pull-right" type="submit">吐槽</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <th:block th:if="${not #lists.isEmpty(notes)}">
+            <div th:each="note:${notes}" class="row col-md-offset-2 col-md-8">
+                <div style="border: 1px solid gray;margin: 5px;padding: 5px">
+                    <h3 th:text="${note.name}"></h3>
+                    <p style="margin-left: 30px;" th:text="${note.text}"></p>
+                    <p style="text-align:right;" th:text="${#dates.format(note.timing,'yyyy年MM月dd日 HH:mm:ss')}"></p>
+                </div>
+            </div>
+        </th:block>
+    </div>
 </body>
+
+<script th:src="@{/bootstrap3.3.7/js/jquery.min.js}"></script>
+<script th:src="@{/bootstrap3.3.7/js/bootstrap.min.js}"></script>
+<script>
+    function checkSays() {
+        var says = document.getElementById("says").value;
+        if(says===""||says===null){
+            return false;
+        }
+    }
+</script>
+
 </html>

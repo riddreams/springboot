@@ -9,6 +9,33 @@ public class UserDO {
 	private String userName;
 	private String passWord;
 	private String role;
+	private String header;
+	private String intro;
+	private String salt;
+
+	public String getHeader() {
+		return header;
+	}
+
+	public void setHeader(String header) {
+		this.header = header;
+	}
+
+	public String getIntro() {
+		return intro;
+	}
+
+	public void setIntro(String intro) {
+		this.intro = intro;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 
 	public int getId() {
 		return id;
