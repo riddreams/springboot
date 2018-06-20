@@ -152,7 +152,9 @@ public class UserController{
 	// index页面
 	@RequestMapping(value = {"/index","/"})
 	public String index(Model model){
-		List<Note> notes = noteService.listNote();
+		int begin = 0;
+		int page = 5;
+		List<Note> notes = noteService.listNote(begin,page);
 		model.addAttribute("notes",notes);
 		return "index";
 	}

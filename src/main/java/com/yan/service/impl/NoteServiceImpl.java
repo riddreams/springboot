@@ -3,6 +3,7 @@ package com.yan.service.impl;
 import com.yan.mapper.NoteMapper;
 import com.yan.model.Note;
 import com.yan.service.NoteService;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,18 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 	@Override
-	public List<Note> listNote() {
-		return noteMapper.listNote();
+	public List<Note> listNote(int begin, int page) {
+		RowBounds rowBounds = new RowBounds(begin,page);
+		return noteMapper.listNote(rowBounds);
 	}
 
 	@Override
 	public void insertNote(String userName, String says, Timestamp timestamp) {
 		noteMapper.insertNote(userName,says,timestamp);
+	}
+
+	@Override
+	public int countNote() {
+		return noteMapper.countNote();
 	}
 }

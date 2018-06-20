@@ -20,4 +20,8 @@
     <insert id="insertNote">
         insert into note values(null,#{userName},#{says},#{timing})
     </insert>
+
+    <select id="countNote" resultType="int">
+        select count(*) from note
+    </select>
 </mapper>

@@ -60,16 +60,21 @@
                 </div>
             </form>
         </div>
-        <th:block th:if="${not #lists.isEmpty(notes)}">
-            <div th:each="note:${notes}" class="row col-md-offset-2 col-md-8">
-                <div style="border: 1px solid gray;margin: 5px;padding: 5px">
-                    <h3 th:text="${note.name}"></h3>
-                    <p style="margin-left: 30px;" th:text="${note.text}"></p>
-                    <p style="text-align:right;" th:text="${#dates.format(note.timing,'yyyy年MM月dd日 HH:mm:ss')}"></p>
+        <div id="main">
+            <th:block th:if="${not #lists.isEmpty(notes)}">
+                <div th:each="note:${notes}" class="row col-md-offset-2 col-md-8">
+                    <div style="border: 1px solid gray;margin: 5px;padding: 5px">
+                        <h3 th:text="${note.name}"></h3>
+                        <p style="margin-left: 30px;" th:text="${note.text}"></p>
+                        <p style="text-align:right;" th:text="${#dates.format(note.timing,'yyyy年MM月dd日 HH:mm:ss')}"></p>
+                    </div>
                 </div>
-            </div>
-        </th:block>
+            </th:block>
+        </div>
     </div>
+<footer style="text-align: center">
+    <label>2018&nbsp;&nbsp;&nbsp;xc</label>
+</footer>
 </body>
 
 <script th:src="@{/bootstrap3.3.7/js/jquery.min.js}"></script>
@@ -80,6 +85,45 @@
         if(says===""||says===null){
             return false;
         }
+    }
+    var begin = 0;
+    //滚动条到页面底部加载更多案例
+    $(window).scroll(function(){
+        var scrollTop = $(this).scrollTop();    //滚动条距离顶部的高度
+        var scrollHeight = $(document).height();   //当前页面的总高度
+        var clientHeight = $(this).height();    //当前可视的页面高度
+        if(scrollTop + clientHeight >= scrollHeight){   //距离顶部+当前高度 >=文档总高度 即代表滑动到底部
+            //滚动条到达底部
+            begin += 5;
+            $.post("/note/listNote",{"begin":begin},function (notes) {
+                var ht = "";
+                $(notes).each(function (index,element) {
+                    ht += '<div class="row col-md-offset-2 col-md-8">'
+                                +'<div style="border: 1px solid gray;margin: 5px;padding: 5px">'
+                                +'<h3>'+element["name"]+'</h3>'
+                                +'<p style="margin-left: 30px;">'+element["text"]+'</p>'
+                                +'<p style="text-align:right;">'+new Date(element["timing"]).Format('yyyy年MM月dd日 HH:mm:ss')+'</p>'
+                            +'</div>'
+                         +'</div>';
+                });
+                $("#main").append(ht);
+            },"json");
+        }
+    });
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "H+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
     }
 </script>
 

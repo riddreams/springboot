@@ -2,6 +2,7 @@ package com.yan.mapper;
 
 import com.yan.model.Note;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -13,7 +14,9 @@ import java.util.List;
 @Repository
 public interface NoteMapper {
 
-	List<Note> listNote();
+	List<Note> listNote(RowBounds rowBounds);
 
 	void insertNote(@Param("userName") String userName, @Param("says") String says, @Param("timing") Timestamp timestamp);
+
+	int countNote();
 }

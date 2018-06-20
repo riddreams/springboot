@@ -10,7 +10,9 @@ import java.util.List;
  */
 public interface NoteService {
 
-	List<Note> listNote();
+	List<Note> listNote(int begin, int page);
 
 	void insertNote(String userName, String says, Timestamp timestamp);
+
+	int countNote();
 }
