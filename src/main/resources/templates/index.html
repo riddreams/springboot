@@ -4,7 +4,7 @@
     <title>首页</title>
     <link rel="stylesheet" th:href="@{/bootstrap3.3.7/css/bootstrap.min.css}"/>
 </head>
-<body>
+<body style="background-color: #f6f6f6">
     <nav class="navbar navbar-default">
         <div class="container">
             <!-- 可以放一个logo -->
@@ -29,7 +29,7 @@
                     <li th:if="${session.userDO}!=null" class="dropdown">
                         <a style="padding: 10px"  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <img th:src="@{'/header/'+${session.userDO.header}}" width="20px" src="">
-                                <span th:text="${session.userDO.userName}"></span>
+                            <span th:text="${session.userDO.userName}"></span>
                             <i class="caret"></i>
                         </a>
                         <ul class="dropdown-menu">
@@ -60,26 +60,46 @@
                 </div>
             </form>
         </div>
-        <div id="main">
+        <div id="main" style="font-family:微软雅黑;">
             <th:block th:if="${not #lists.isEmpty(notes)}">
                 <div th:each="note:${notes}" class="row col-md-offset-2 col-md-8">
-                    <div style="border: 1px solid gray;margin: 5px;padding: 5px">
-                        <h3 th:text="${note.name}"></h3>
-                        <p style="margin-left: 30px;" th:text="${note.text}"></p>
+                    <div style="background-color: white;margin: 5px;padding: 5px">
+                        <img style="border-radius:50%;" src="" th:src="@{'/header/'+${note.userDO.header}}" width="40px">
+                        <span style="font-size: 25px" th:text="${note.userDO.userName}"></span>
+                        <p style="margin-left: 30px;font-size: 18px" th:if="${#strings.length(note.text)<=3}" th:text="${note.text}"></p>
+                        <p style="margin-left: 30px;font-size: 18px" th:if="${#strings.length(note.text)>3}">
+                            <span style="display: block;" th:text="${#strings.substring(note.text,0,3)}+'...'"></span>
+                            <span style="display: none;" th:text="${note.text}"></span>
+                            <button onclick="changeState(this)" class="btn btn-link">阅读全文</button>
+                        </p>
                         <p style="text-align:right;" th:text="${#dates.format(note.timing,'yyyy年MM月dd日 HH:mm:ss')}"></p>
                     </div>
                 </div>
             </th:block>
         </div>
     </div>
-<footer style="text-align: center">
-    <label>2018&nbsp;&nbsp;&nbsp;xc</label>
+    <a id="toTop" href="javascript:void(0);" style="right:50px;position: fixed;bottom: 30px;display: none;">
+        <img width="50px" src="" th:src="@{/image/toTop.png}" title="回到顶部">
+    </a>
+<footer style="text-align: center;margin: 20px">
+    <label>2018&nbsp;&nbsp;&nbsp;&copy;&nbsp;&nbsp;&nbsp;xc</label>
 </footer>
 </body>
 
 <script th:src="@{/bootstrap3.3.7/js/jquery.min.js}"></script>
 <script th:src="@{/bootstrap3.3.7/js/bootstrap.min.js}"></script>
 <script>
+    function changeState(obj) {
+        if(obj.innerHTML==="阅读全文"){
+            obj.parentNode.children[0].style.display="none";
+            obj.parentNode.children[1].style.display="block";
+            obj.innerHTML="收起";
+        }else if(obj.innerHTML==="收起"){
+            obj.parentNode.children[0].style.display="block";
+            obj.parentNode.children[1].style.display="none";
+            obj.innerHTML="阅读全文";
+        }
+    }
     function checkSays() {
         var says = document.getElementById("says").value;
         if(says===""||says===null){
@@ -99,10 +119,20 @@
                 var ht = "";
                 $(notes).each(function (index,element) {
                     ht += '<div class="row col-md-offset-2 col-md-8">'
-                                +'<div style="border: 1px solid gray;margin: 5px;padding: 5px">'
-                                +'<h3>'+element["name"]+'</h3>'
-                                +'<p style="margin-left: 30px;">'+element["text"]+'</p>'
-                                +'<p style="text-align:right;">'+new Date(element["timing"]).Format('yyyy年MM月dd日 HH:mm:ss')+'</p>'
+                                +'<div style="background-color: white;margin: 5px;padding: 5px">'
+                                +'<img style="border-radius:50%;" src="/header/'+element["userDO"]["header"]+'" width="40px">'
+                                +'<span style="font-size: 25px">'+element["userDO"]["userName"]+'</span>';
+                        var text = element["text"];
+                        if(text.length<=3){
+                            ht+='<p style="margin-left: 30px;font-size: 18px">'+text+'</p>';
+                        }else {
+                            ht+='<p style="margin-left: 30px;font-size: 18px">'
+                                    +'<span style="display: block">'+text.substring(0,3)+'...</span>'
+                                    +'<span style="display: none">'+text+'</span>'
+                                    +'<button onclick="changeState(this)" class="btn btn-link">阅读全文</button>'
+                                +'</p>';
+                        }
+                            ht+='<p style="text-align:right;">'+new Date(element["timing"]).Format('yyyy年MM月dd日 HH:mm:ss')+'</p>'
                             +'</div>'
                          +'</div>';
                 });
@@ -125,6 +155,20 @@
             if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
         return fmt;
     }
+</script>
+<script>
+    $(function(){
+        $(window).scroll(function(){
+            if($(window).scrollTop() > 100){
+                $("#toTop").fadeIn(500);//一秒渐入动画
+            }else{
+                $("#toTop").fadeOut(500);//一秒渐隐动画
+            }
+        });
+        $("#toTop").click(function(){
+            $('body,html').animate({scrollTop:0},500);
+        });
+    });
 </script>
 
 </html>

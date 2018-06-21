@@ -6,15 +6,23 @@
     <resultMap id="noteMap" type="Note">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
-        <result property="score" column="score"/>
+        <result property="text" column="text"/>
+        <result property="timing" column="timing"/>
+        <association property="userDO" column="name" select="com.yan.mapper.UserMapper.getUserByName"/>
     </resultMap>
 
     <sql id="note_cols">
         id,name,text,timing
     </sql>
 
+    <!--需要级联查询，所以使用resultMap-->
     <select id="listNote" resultMap="noteMap">
         select <include refid="note_cols"/> from note order by timing desc
+    </select>
+
+    <!--不需要级联查询，所以使用resultType-->
+    <select id="listNoteByName" resultType="Note">
+        select <include refid="note_cols"/> from note where name = #{name} order by timing desc
     </select>
 
     <insert id="insertNote">

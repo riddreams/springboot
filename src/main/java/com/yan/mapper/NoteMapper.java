@@ -16,6 +16,8 @@ public interface NoteMapper {
 
 	List<Note> listNote(RowBounds rowBounds);
 
+	List<Note> listNoteByName(@Param("name")String name);
+
 	void insertNote(@Param("userName") String userName, @Param("says") String says, @Param("timing") Timestamp timestamp);
 
 	int countNote();

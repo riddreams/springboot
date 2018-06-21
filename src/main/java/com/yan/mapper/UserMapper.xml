@@ -11,13 +11,14 @@
         <result property="salt" column="salt"/>
         <result property="intro" column="intro"/>
         <result property="header" column="header"/>
+        <collection property="notes" column="username" select="com.yan.mapper.NoteMapper.listNoteByName"/>
     </resultMap>
 
     <sql id="user_cols">
         id,username,password,salt,role,intro,header
     </sql>
 
-    <!--根据用户名查找用户-->
+    <!--根据用户名查找用户，需要级联查询，所以使用resultMap-->
     <select id="getUserByName" resultMap="userMap">
         select <include refid="user_cols"/> from user where username = #{userName}
     </select>

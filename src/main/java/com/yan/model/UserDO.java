@@ -1,10 +1,12 @@
 package com.yan.model;
 
+import java.util.List;
+
 /**
  * 与数据库中的user表对应
  * @author lwyan on 2018-05-18 11:28
  */
-public class UserDO {
+public class UserDO{
 	private int id;
 	private String userName;
 	private String passWord;
@@ -12,6 +14,15 @@ public class UserDO {
 	private String header;
 	private String intro;
 	private String salt;
+	private List<Note> notes;
+
+	public List<Note> getNotes() {
+		return notes;
+	}
+
+	public void setNotes(List<Note> notes) {
+		this.notes = notes;
+	}
 
 	public String getHeader() {
 		return header;

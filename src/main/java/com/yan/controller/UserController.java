@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -157,5 +158,17 @@ public class UserController{
 		List<Note> notes = noteService.listNote(begin,page);
 		model.addAttribute("notes",notes);
 		return "index";
+	}
+
+	// 测试一对多级联
+	@RequestMapping(value = "/users/{userName}")
+	@ResponseBody
+	public UserDO test(@PathVariable("userName")String userName){
+		UserDO userDO = userService.getUserByName(userName);
+		List<Note> notes = userDO.getNotes();
+		for (Note note:notes){
+			System.out.println(note.getText());
+		}
+		return userDO;
 	}
 }

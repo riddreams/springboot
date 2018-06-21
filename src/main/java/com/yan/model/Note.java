@@ -5,11 +5,21 @@ import java.util.Date;
 /**
  * @author lwyan on 2018-06-06 11:51
  */
-public class Note {
+public class Note{
 	private int id;
 	private String name;
 	private String text;
 	private Date timing;
+	private UserDO userDO;
+
+	public UserDO getUserDO() {
+		return userDO;
+	}
+
+	public void setUserDO(UserDO userDO) {
+		this.userDO = userDO;
+	}
+
 	public int getId() {
 		return id;
 	}
