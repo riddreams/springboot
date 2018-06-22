@@ -4,8 +4,8 @@
     <title th:text="${session.userDO.userName}+'的个人主页'"></title>
     <link rel="stylesheet" th:href="@{/bootstrap3.3.7/css/bootstrap.min.css}"/>
 </head>
-<body>
-<nav class="navbar navbar-default">
+<body style="background-color: #f6f6f6">
+<nav style="background-color: white" class="navbar navbar-default">
     <div class="container">
         <!-- 可以放一个logo -->
         <div class="navbar-header">
@@ -14,7 +14,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li><a th:href="@{/index}">吐槽</a></li>
-                <li><a href="">学习</a></li>
+                <li><a th:href="@{/study/studyIndex}">学习</a></li>
                 <li><a th:href="@{/enjoy/enjoyIndex}">娱乐</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -46,15 +46,15 @@
     </div>
 </nav>
 
-<div class="container-fluid" style="margin: 0;">
+<div class="container-fluid" style="margin: 0;font-family: 微软雅黑">
     <div style="text-align: center" class="row">
         <a href="javascript:void(0);">
             <img title="修改头像" onclick="changeHeader()" th:src="@{'/header/'+${session.userDO.header}}" style="border-radius:50%;" width="120px" height="120px" src=""/>
         </a>
     </div>
     <div style="text-align: center" class="row">
-        <h3 th:text="${session.userDO.userName}"></h3>
-        <h6 th:text="${session.userDO.intro}"></h6>
+        <h3 style="font-size: 18px" th:text="${session.userDO.userName}"></h3>
+        <h6 style="font-size: 15px" th:text="${session.userDO.intro}"></h6>
     </div>
     <div class="container">
         <h3>我的粉丝</h3>

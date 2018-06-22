@@ -5,7 +5,7 @@
     <link rel="stylesheet" th:href="@{/bootstrap3.3.7/css/bootstrap.min.css}"/>
 </head>
 <body style="background-color: #f6f6f6">
-    <nav class="navbar navbar-default">
+    <nav style="background-color: white" class="navbar navbar-default">
         <div class="container">
             <!-- 可以放一个logo -->
             <div class="navbar-header">
@@ -14,7 +14,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li class="active"><a th:href="@{/index}">吐槽</a></li>
-                    <li><a href="">学习</a></li>
+                    <li><a th:href="@{/study/studyIndex}">学习</a></li>
                     <li><a th:href="@{/enjoy/enjoyIndex}">娱乐</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -47,15 +47,16 @@
     </nav>
     <div class="container">
         <div class="row">
-            <form class="form-horizontal" onsubmit="return checkSays()" th:action="@{/note/sendNote}" method="post">
+            <form id="form1" class="form-horizontal" th:action="@{/note/sendNote}" method="post">
                 <div class="form-group">
                     <div class="col-md-6 col-md-offset-3">
-                        <textarea class="form-control" placeholder="说点什么吧！" name="says" id="says" cols="70" rows="3"></textarea>
+                        <textarea style="resize: none" class="form-control" placeholder="说点什么吧！" id="say" cols="70" rows="5"></textarea>
+                        <textarea id="says" style="display: none" name="says"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-6 col-md-offset-3">
-                        <button class="btn btn-primary pull-right" type="submit">吐槽</button>
+                        <button onclick="checkSays()" class="btn btn-primary pull-right" type="button">吐槽</button>
                     </div>
                 </div>
             </form>
@@ -64,15 +65,15 @@
             <th:block th:if="${not #lists.isEmpty(notes)}">
                 <div th:each="note:${notes}" class="row col-md-offset-2 col-md-8">
                     <div style="background-color: white;margin: 5px;padding: 5px">
-                        <img style="border-radius:50%;" src="" th:src="@{'/header/'+${note.userDO.header}}" width="40px">
-                        <span style="font-size: 25px" th:text="${note.userDO.userName}"></span>
-                        <p style="margin-left: 30px;font-size: 18px" th:if="${#strings.length(note.text)<=3}" th:text="${note.text}"></p>
-                        <p style="margin-left: 30px;font-size: 18px" th:if="${#strings.length(note.text)>3}">
-                            <span style="display: block;" th:text="${#strings.substring(note.text,0,3)}+'...'"></span>
-                            <span style="display: none;" th:text="${note.text}"></span>
+                        <img style="border-radius:50%;" src="" th:src="@{'/header/'+${note.userDO.header}}" width="24px" height="24px">
+                        <span style="font-size: 18px" th:text="${note.userDO.userName}"></span>
+                        <p style="margin-left: 30px;font-size: 15px" th:if="${#strings.length(note.text)<=10}" th:utext="${note.text}"></p>
+                        <p style="margin-left: 30px;font-size: 15px" th:if="${#strings.length(note.text)>10}">
+                            <span style="display: block;" th:utext="${#strings.substring(note.text,0,(#strings.indexOf(note.text,'<br/>')==-1?10:#strings.indexOf(note.text,'<br/>')))}+'...'"></span>
+                            <span style="display: none;" th:utext="${note.text}"></span>
                             <button onclick="changeState(this)" class="btn btn-link">阅读全文</button>
                         </p>
-                        <p style="text-align:right;" th:text="${#dates.format(note.timing,'yyyy年MM月dd日 HH:mm:ss')}"></p>
+                        <p style="text-align:right;font-size: 10px" th:text="${#dates.format(note.timing,'yyyy年MM月dd日 HH:mm:ss')}"></p>
                     </div>
                 </div>
             </th:block>
@@ -81,9 +82,6 @@
     <a id="toTop" href="javascript:void(0);" style="right:50px;position: fixed;bottom: 30px;display: none;">
         <img width="50px" src="" th:src="@{/image/toTop.png}" title="回到顶部">
     </a>
-<footer style="text-align: center;margin: 20px">
-    <label>2018&nbsp;&nbsp;&nbsp;&copy;&nbsp;&nbsp;&nbsp;xc</label>
-</footer>
 </body>
 
 <script th:src="@{/bootstrap3.3.7/js/jquery.min.js}"></script>
@@ -91,19 +89,24 @@
 <script>
     function changeState(obj) {
         if(obj.innerHTML==="阅读全文"){
-            obj.parentNode.children[0].style.display="none";
-            obj.parentNode.children[1].style.display="block";
+            $(obj).prev().prev().css({display:"none"});
+            $(obj).prev().css({display:"block"});
             obj.innerHTML="收起";
         }else if(obj.innerHTML==="收起"){
-            obj.parentNode.children[0].style.display="block";
-            obj.parentNode.children[1].style.display="none";
+            $(obj).prev().prev().css({display:"block"});
+            $(obj).prev().css({display:"none"});
             obj.innerHTML="阅读全文";
         }
     }
     function checkSays() {
-        var says = document.getElementById("says").value;
+        var says = document.getElementById("say").value;
         if(says===""||says===null){
             return false;
+        }else{
+            says = says.replace(/\n|\r\n/g,"<br/>");
+            document.getElementById("says").value = says.replace(/(^\s*)|(\s*$)/g,"");
+            $("#form1").submit();
+            return true;
         }
     }
     var begin = 0;
@@ -120,19 +123,19 @@
                 $(notes).each(function (index,element) {
                     ht += '<div class="row col-md-offset-2 col-md-8">'
                                 +'<div style="background-color: white;margin: 5px;padding: 5px">'
-                                +'<img style="border-radius:50%;" src="/header/'+element["userDO"]["header"]+'" width="40px">'
-                                +'<span style="font-size: 25px">'+element["userDO"]["userName"]+'</span>';
+                                +'<img style="border-radius:50%;" src="/header/'+element["userDO"]["header"]+'" width="24px" height="24px">'
+                                +'<span style="font-size: 18px">'+element["userDO"]["userName"]+'</span>';
                         var text = element["text"];
-                        if(text.length<=3){
-                            ht+='<p style="margin-left: 30px;font-size: 18px">'+text+'</p>';
+                        if(text.length<=10){
+                            ht+='<p style="margin-left: 30px;font-size: 15px">'+text+'</p>';
                         }else {
-                            ht+='<p style="margin-left: 30px;font-size: 18px">'
-                                    +'<span style="display: block">'+text.substring(0,3)+'...</span>'
+                            ht+='<p style="margin-left: 30px;font-size: 15px">'
+                                    +'<span style="display: block">'+text.substring(0,text.indexOf("<br/>")===-1?10:text.indexOf("<br/>"))+'...</span>'
                                     +'<span style="display: none">'+text+'</span>'
                                     +'<button onclick="changeState(this)" class="btn btn-link">阅读全文</button>'
                                 +'</p>';
                         }
-                            ht+='<p style="text-align:right;">'+new Date(element["timing"]).Format('yyyy年MM月dd日 HH:mm:ss')+'</p>'
+                            ht+='<p style="text-align:right;font-size: 10px">'+new Date(element["timing"]).Format('yyyy年MM月dd日 HH:mm:ss')+'</p>'
                             +'</div>'
                          +'</div>';
                 });
@@ -140,7 +143,7 @@
             },"json");
         }
     });
-    Date.prototype.Format = function (fmt) { //author: meizz
+    Date.prototype.Format = function (fmt) {
         var o = {
             "M+": this.getMonth() + 1, //月份
             "d+": this.getDate(), //日

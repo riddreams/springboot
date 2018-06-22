@@ -4,8 +4,8 @@
     <title>娱乐</title>
     <link rel="stylesheet" th:href="@{/bootstrap3.3.7/css/bootstrap.min.css}"/>
 </head>
-<body>
-<nav class="navbar navbar-default">
+<body style="background-color: #f6f6f6">
+<nav style="background-color: white" class="navbar navbar-default">
     <div class="container">
         <!-- 可以放一个logo -->
         <div class="navbar-header">
@@ -14,7 +14,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li><a th:href="@{/index}">吐槽</a></li>
-                <li><a href="">学习</a></li>
+                <li><a th:href="@{/study/studyIndex}">学习</a></li>
                 <li class="active"><a th:href="@{/enjoy/enjoyIndex}">娱乐</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -46,7 +46,7 @@
     </div>
 </nav>
 <div class="container">
-    <a th:href="@{/enjoy/game}"><h3>玩个小游戏</h3></a>
+    <a th:href="@{/enjoy/game}"><span style="font-size: 16px">贪吃蛇小游戏</span></a>
 </div>
 </body>
 
