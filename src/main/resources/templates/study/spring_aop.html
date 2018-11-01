@@ -4,7 +4,7 @@
     <title>Spring AOP</title>
     <link rel="stylesheet" th:href="@{/bootstrap3.3.7/css/bootstrap.min.css}"/>
 </head>
-<body style="background-color: #f6f6f6">
+<body th:attr="background=@{/image/bg.jpg}">
 <nav style="background-color: white" class="navbar navbar-default">
     <div class="container">
         <!-- 可以放一个logo -->
@@ -46,8 +46,9 @@
     </div>
 </nav>
 <div class="container">
-    <article style="font-size: 16px;font-family: 微软雅黑">
-        <div class="row">
+    <img src="" height="100px" width="100%" th:src="@{/image/bg-title.png}"/>
+    <article>
+        <div style="margin:0 10px 30px 10px;padding:10px 100px;background-color:white;font-size: 16px;font-family: 微软雅黑" class="row">
             <h3>AOP概述</h3>
             <br/>
             <p>在软件开发中，散布于应用中多处的功能（如安全，事务和日志模块等）被称为横切关注点。通常来讲，这些横切关注点从概念上是与应用的业务逻辑相分离的（但是往往会直接嵌入到应用的业务逻辑之中）。把这些横切关注点与业务逻辑相分离正是面向切面编程所要解决的问题。</p>
@@ -71,14 +72,17 @@
             <p>织入是把切面应用到目标对象并创建新的代理对象的过程。</p>
             <br/><h3>基于注解的AOP实例</h3>
             <br/><h4>1.定义表演接口</h4>
-            <pre><code style="font-size: 15px;color: #A50000">
+            <pre style="background-color:#eef0f4;border: none">
+                <code style="font-size: 15px;color: #A50000">
 package annotationaop;
 public interface Performance {
   void perform();
 }
-            </code></pre>
+                </code>
+            </pre>
             <br/><h4>2.表演者实现表演接口</h4>
-            <pre><code style="font-size: 15px;color: #A50000">
+            <pre style="background-color:#eef0f4;border: none">
+                <code style="font-size: 15px;color: #A50000">
 package annotationaop;
 public class Performer implements Performance{
     @Override
@@ -86,9 +90,11 @@ public class Performer implements Performance{
         System.out.println("Performer Perform");
     }
 }
-            </code></pre>
+                </code>
+            </pre>
             <br/><h4>3.定义观看演出的切面</h4>
-            <pre><code style="font-size: 15px;color: #A50000">
+            <pre style="background-color:#eef0f4;border: none">
+                <code style="font-size: 15px;color: #A50000">
 package annotationaop;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -128,9 +134,11 @@ public class Audience{
         }
     }
 }
-            </code></pre>
+                </code>
+            </pre>
             <br/><h4>4.配置bean</h4>
-            <pre><code style="font-size: 15px;color: #A50000">
+            <pre style="background-color:#eef0f4;border: none">
+                <code style="font-size: 15px;color: #A50000">
 package annotationaop;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -148,9 +156,11 @@ public class AOPAspectConfig {
         return new Performer();
     }
 }
-            </code></pre>
+                </code>
+            </pre>
             <br/><h4>5.测试</h4>
-            <pre><code style="font-size: 15px;color: #A50000">
+            <pre style="background-color:#eef0f4;border: none">
+                <code style="font-size: 15px;color: #A50000">
 package annotationaop;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -161,14 +171,17 @@ public class AopAspectTest {
         performance.perform();
     }
 }
-            </code></pre>
+                </code>
+            </pre>
             <br/><h4>结果如下：</h4>
-            <pre><code style="font-size: 15px;color: #A50000">
+            <pre style="background-color:#eef0f4;border: none">
+                <code style="font-size: 15px;color: #A50000">
 Silencing cell phones
 Taking seats
 Performer Perform
 CLAP CLAP CLAP!!!
-            </code></pre>
+                </code>
+            </pre>
             <br/><h3>问题</h3><br/>
             <p>因为Spring基于动态代理，所以Spring只支持方法连接点。这与一些其他的AOP框架是不同的，例如AspectJ和JBoss，除了方法切点，它们还提供了字段和构造器接入点。如果需要方法拦截之外的连接点拦截功能，那么我们可以利用Aspect来补充Spring AOP的功能。</p><br/>
         </div>
@@ -180,4 +193,3 @@ CLAP CLAP CLAP!!!
 <script th:src="@{/bootstrap3.3.7/js/bootstrap.min.js}"></script>
 
 </html>
-

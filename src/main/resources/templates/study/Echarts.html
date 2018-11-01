@@ -1,0 +1,198 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Echarts</title>
+    <link rel="stylesheet" th:href="@{/bootstrap3.3.7/css/bootstrap.min.css}"/>
+</head>
+<body th:attr="background=@{/image/bg.jpg}">
+<nav style="background-color: white" class="navbar navbar-default">
+    <div class="container">
+        <!-- 可以放一个logo -->
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/index}">XC</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/index}">吐槽</a></li>
+                <li class="active"><a th:href="@{/study/studyIndex}">学习</a></li>
+                <li><a th:href="@{/enjoy/enjoyIndex}">娱乐</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <form class="navbar-form navbar-left" action="" method="post">
+                        <div class="form-group">
+                            <input type="text" id="keyword" name="keyword" class="form-control" placeholder="搜索关键字">
+                        </div>
+                        <button type="submit" class="btn btn-default">搜索</button>
+                    </form>
+                </li>
+                <li th:if="${session.userDO}!=null" class="dropdown">
+                    <a style="padding: 10px"  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <img th:src="@{'/header/'+${session.userDO.header}}" width="20px" src="">
+                        <span th:text="${session.userDO.userName}"></span>
+                        <i class="caret"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="btn" th:href="@{/userSetting/home}"><i class="glyphicon glyphicon-home"></i>个人主页</a></li>
+                        <li><a class="btn" th:href="@{/userSetting/settingbase}"><i class="glyphicon glyphicon-cog"></i>个人设置</a></li>
+                        <li><a class="btn" th:href="@{/logout}"><i class="glyphicon glyphicon-log-out"></i>退出登录</a></li>
+                    </ul>
+                </li>
+                <li th:if="${session.userDO}==null">
+                    <a style="color: blue" th:href="@{/login}">登录</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <img src="" height="100px" width="100%" th:src="@{/image/bg-title.png}"/>
+    <div class="row">
+        <div style="float:left;">
+            <h3>1.Echarts绘制一个简单的图表</h3>
+            <div id="simpleChart" style="width: 500px;height: 400px;"></div>
+        </div>
+
+        <div style="float: right">
+            <h3>2.Echarts绘制一个饼状图</h3>
+            <div id="pancake" style="width: 500px;height: 400px;"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div style="float: left">
+            <h3>3.Echarts绘制一个南丁格尔图</h3>
+            <div id="Nightingale" style="width: 500px;height: 400px;"></div>
+        </div>
+
+        <div style="float: right">
+            <h3>4.Echarts异步加载数据</h3>
+            <div id="ajaxLoad" style="width: 500px;height: 400px;"></div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+
+<script th:src="@{/bootstrap3.3.7/js/jquery.min.js}"></script>
+<script th:src="@{/bootstrap3.3.7/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/echarts4.js}"></script>
+<script>
+    var simpleChart = echarts.init(document.getElementById("simpleChart"));
+    var option = {
+        title:{
+            text:"Echarts入门示例",
+            subtext:"数据来源：瞎编乱造的"
+        },
+        tooltip:{
+            trigger:"axis"
+        },
+        legend:{
+            data:["销量"]
+        },
+        xAxis:{
+            data:["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+        },
+        yAxis:{
+            type:"value",
+            axisLabel:{
+                formatter:"{value}万件"
+            }
+        },
+        series:[{
+            name:"销量",
+            type:"bar",
+            data:[5,20,36,10,10,20]
+        }]
+    };
+    simpleChart.setOption(option);
+
+    echarts.init(document.getElementById("pancake")).setOption({
+        title:{
+            text:'Echarts饼状图'
+        },
+        legend:{
+          data:['访问来源']
+        },
+        series : [
+            {
+                name: '访问来源',
+                type: 'pie',
+                radius: '55%',
+                data:[
+                    {value:235, name:'视频广告'},
+                    {value:274, name:'联盟广告'},
+                    {value:310, name:'邮件营销'},
+                    {value:335, name:'直接访问'},
+                    {value:400, name:'搜索引擎'}
+                ]
+            }
+        ]
+    });
+
+    echarts.init(document.getElementById("Nightingale")).setOption({
+        title:{
+            text:'Echarts南丁格尔图'
+        },
+        legend:{
+            data:['访问来源']
+        },
+        series : [
+            {
+                name: '访问来源',
+                type: 'pie',
+                radius: '55%',
+                roseType:'angle',
+                data:[
+                    {value:235, name:'视频广告'},
+                    {value:274, name:'联盟广告'},
+                    {value:310, name:'邮件营销'},
+                    {value:335, name:'直接访问'},
+                    {value:400, name:'搜索引擎'}
+                ]
+            }
+        ]
+    });
+
+    var ajaxLoad = echarts.init(document.getElementById("ajaxLoad"));
+    ajaxLoad.showLoading();
+    $.post('/enjoy/getRange',function (data) {
+        var name = [];
+        var score = [];
+        $(data).each(function (index,element) {
+            name[index] = element['name'];
+            score[index] = element['score'];
+        });
+        ajaxLoad.hideLoading();
+        ajaxLoad.setOption({
+            title:{
+                text:"Echarts异步加载数据",
+                subtext:"数据来源：ajax异步从数据库加载"
+            },
+            tooltip:{
+                trigger:"axis"
+            },
+            legend:{
+                data:["分数"]
+            },
+            xAxis:{
+                data:name
+            },
+            yAxis:{
+                type:"value",
+                axisLabel:{
+                    formatter:"{value}分"
+                }
+            },
+            series:[{
+                name:"分数",
+                type:"bar",
+                data:score
+            }]
+        });
+    });
+
+
+</script>
+
+</html>

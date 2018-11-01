@@ -3,6 +3,13 @@
 <head>
     <title>首页</title>
     <link rel="stylesheet" th:href="@{/bootstrap3.3.7/css/bootstrap.min.css}"/>
+    <style>
+        .oneLine{
+            overflow: hidden;/*内容超出后隐藏*/
+            text-overflow: ellipsis;/* 超出内容显示为省略号*/
+            white-space: nowrap;/*文本不进行换行*/
+        }
+    </style>
 </head>
 <body style="background-color: #f6f6f6">
     <nav style="background-color: white" class="navbar navbar-default">
@@ -67,10 +74,15 @@
                     <div style="background-color: white;margin: 5px;padding: 5px">
                         <img style="border-radius:50%;" src="" th:src="@{'/header/'+${note.userDO.header}}" width="24px" height="24px">
                         <span style="font-size: 18px" th:text="${note.userDO.userName}"></span>
+                        <!--如果文本长度小于等于10，直接显示-->
                         <p style="margin-left: 30px;font-size: 15px" th:if="${#strings.length(note.text)<=10}" th:utext="${note.text}"></p>
+                        <!--如果文本长度大于10-->
                         <p style="margin-left: 30px;font-size: 15px" th:if="${#strings.length(note.text)>10}">
-                            <span style="display: block;" th:utext="${#strings.substring(note.text,0,(#strings.indexOf(note.text,'<br/>')==-1?10:#strings.indexOf(note.text,'<br/>')))}+'...'"></span>
+                            <!--截取部分显示，如果没有换行，截取前10个字符，否则截取第一段-->
+                            <span class="oneLine" style="display: block;" th:utext="${#strings.substring(note.text,0,(#strings.indexOf(note.text,'<br/>')==-1?10:#strings.indexOf(note.text,'<br/>')))}+'...'"></span>
+                            <!--显示全部-->
                             <span style="display: none;" th:utext="${note.text}"></span>
+                            <!--切换部分显示与全文显示-->
                             <button onclick="changeState(this)" class="btn btn-link">阅读全文</button>
                         </p>
                         <p style="text-align:right;font-size: 10px" th:text="${#dates.format(note.timing,'yyyy年MM月dd日 HH:mm:ss')}"></p>
@@ -87,6 +99,7 @@
 <script th:src="@{/bootstrap3.3.7/js/jquery.min.js}"></script>
 <script th:src="@{/bootstrap3.3.7/js/bootstrap.min.js}"></script>
 <script>
+    //切换显示部分与显示全文状态
     function changeState(obj) {
         if(obj.innerHTML==="阅读全文"){
             $(obj).prev().prev().css({display:"none"});
@@ -103,23 +116,26 @@
         if(says===""||says===null){
             return false;
         }else{
+            //将换行符转换为<br/>，存入数据库
             says = says.replace(/\n|\r\n/g,"<br/>");
+            //去掉左右两端的空格
             document.getElementById("says").value = says.replace(/(^\s*)|(\s*$)/g,"");
             $("#form1").submit();
             return true;
         }
     }
     var begin = 0;
-    //滚动条到页面底部加载更多案例
+    //滚动条到页面底部加载更多note
     $(window).scroll(function(){
         var scrollTop = $(this).scrollTop();    //滚动条距离顶部的高度
         var scrollHeight = $(document).height();   //当前页面的总高度
         var clientHeight = $(this).height();    //当前可视的页面高度
         if(scrollTop + clientHeight >= scrollHeight){   //距离顶部+当前高度 >=文档总高度 即代表滑动到底部
-            //滚动条到达底部
+            //滚动条到达底部，采用ajax加载json数据，然后追加到页面
             begin += 5;
             $.post("/note/listNote",{"begin":begin},function (notes) {
                 var ht = "";
+                //遍历取到的note
                 $(notes).each(function (index,element) {
                     ht += '<div class="row col-md-offset-2 col-md-8">'
                                 +'<div style="background-color: white;margin: 5px;padding: 5px">'
@@ -130,7 +146,7 @@
                             ht+='<p style="margin-left: 30px;font-size: 15px">'+text+'</p>';
                         }else {
                             ht+='<p style="margin-left: 30px;font-size: 15px">'
-                                    +'<span style="display: block">'+text.substring(0,text.indexOf("<br/>")===-1?10:text.indexOf("<br/>"))+'...</span>'
+                                    +'<span class="oneLine" style="display: block">'+text.substring(0,text.indexOf("<br/>")===-1?10:text.indexOf("<br/>"))+'...</span>'
                                     +'<span style="display: none">'+text+'</span>'
                                     +'<button onclick="changeState(this)" class="btn btn-link">阅读全文</button>'
                                 +'</p>';
@@ -169,6 +185,7 @@
             }
         });
         $("#toTop").click(function(){
+            //滚动到顶部
             $('body,html').animate({scrollTop:0},500);
         });
     });

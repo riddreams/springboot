@@ -30,6 +30,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
 		registry.addViewController("/enjoy/game").setViewName("enjoy/game");
 		registry.addViewController("/study/studyIndex").setViewName("study/studyIndex");
 		registry.addViewController("/study/spring_aop").setViewName("study/spring_aop");
+		registry.addViewController("/study/Echarts").setViewName("study/Echarts");
 	}
 
 	// 登录验证拦截器bean
