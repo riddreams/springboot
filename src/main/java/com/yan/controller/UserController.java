@@ -119,7 +119,7 @@ public class UserController{
 			session.setAttribute("userDO",userDO);
 			attr.addFlashAttribute("message","修改成功");
 		}
-		return "redirect:/userSetting/settingbase";
+		return "redirect:/setting/settingbase";
 	}
 
 	// 修改头像
@@ -147,7 +147,7 @@ public class UserController{
 				e.printStackTrace();
 			}
 		}
-		return "redirect:/userSetting/home";
+		return "redirect:/setting/home";
 	}
 
 	// index页面

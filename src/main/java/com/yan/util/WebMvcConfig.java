@@ -20,12 +20,10 @@ import javax.servlet.http.HttpSession;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer{
 	public void addViewControllers(ViewControllerRegistry registry){
-//		registry.addViewController("/").setViewName("index");
-//		registry.addViewController("/index").setViewName("index");
 		registry.addViewController("/login").setViewName("login");
 		registry.addViewController("/register").setViewName("register");
-		registry.addViewController("/userSetting/settingbase").setViewName("userSetting/settingbase");
-		registry.addViewController("/userSetting/home").setViewName("userSetting/home");
+		registry.addViewController("/setting/settingbase").setViewName("setting/settingbase");
+		registry.addViewController("/setting/home").setViewName("setting/home");
 		registry.addViewController("/enjoy/enjoyIndex").setViewName("enjoy/enjoyIndex");
 		registry.addViewController("/enjoy/game").setViewName("enjoy/game");
 		registry.addViewController("/study/studyIndex").setViewName("study/studyIndex");
@@ -51,7 +49,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
 		*/
 
 		// 拦截配置
-		addInterceptor.addPathPatterns("/userSetting/**")
+		addInterceptor.addPathPatterns("/setting/**")
 				.addPathPatterns("/enjoy/game")
 				.addPathPatterns("/note/sendNote");
 	}

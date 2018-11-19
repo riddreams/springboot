@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>出错啦</title>
+</head>
+<body>
+    <div style="text-align: center">
+        <h3>出错啦，请确认操作无误或联系管理员！</h3>
+        <h4 th:text="'错误原因：'+${error}"></h4>
+        <a th:href="@{/index}">返回首页</a>
+        <div th:text="${#dates.format(timestamp,'yyyy-MM-dd HH:mm:ss')}"></div>
+    </div>
+</body>
+</html>
